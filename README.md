@@ -99,6 +99,10 @@ npm start  # Runs on http://localhost:3000
 
 ---
 
+## 📑 Postman API Documentation
+
+For detailed API documentation and testing, please refer to the [Postman API Documentation](https://documenter.getpostman.com/view/39215245/2sAYQfDouP)
+
 ## 🎨 UI Design  
 
 The UI design for **King Hub** is created using **Figma**, ensuring a modern and intuitive user experience.
