@@ -1,5 +1,4 @@
 
-
 const express = require('express');
 const router = express.Router();
 const MenuItem = require('../models/MenuItem');
@@ -36,7 +35,7 @@ router.get('/:foodname', async (req, res) => {
         const foodname = req.params.foodname;
         const lower=foodname.toLowerCase();
         // console.log(lower)
-        const areaname = await menuitems.findOne({ foodname: lower });
+        const areaname = await MenuItem.findOne({ foodname: lower });
 
         if (!areaname) {
             return res.status(404).json({ message: "No hostels found in this foodname." });
