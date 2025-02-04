@@ -1,0 +1,18 @@
+{
+  "name": "king_hub",
+  "version": "1.0.0",
+  "description": "King Hub is a modern and user-friendly food delivery platform designed to connect users with their favorite restaurants. It offers seamless order placement, real-time tracking, and a responsive UI for an excellent food ordering experience.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5"
+  }
+}
