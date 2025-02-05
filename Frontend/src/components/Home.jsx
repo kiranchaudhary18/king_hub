@@ -1,9 +1,14 @@
-
 import React from 'react';
 import Footer from './Footer';
 import PopularLocalities from './Location';
 
 const HomePage = () => {
+
+  const handleOrderNow = () => {
+    navigate('/restaurants'); // Navigate to the restaurants page
+  };
+
+
   return (
     <div className="max-screen bg-gradient-to-br from-red-500 to-green-500 font-sans">
       {/* Hero Section */}
@@ -16,10 +21,15 @@ const HomePage = () => {
             Enjoy your favorite meals from top-rated restaurants near you.
           </p>
           <div className="flex justify-center space-x-4">
-            <button className="bg-white text-red-500 font-semibold py-3 px-8 rounded-full hover:bg-opacity-90 transition duration-300">
+            <button
+              onClick={handleOrderNow}
+              className="bg-white text-red-500 font-semibold py-3 px-8 rounded-full hover:bg-opacity-90 transition duration-300">
               Order Now
             </button>
-            <button className="border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-red-500 transition duration-300">
+            <button
+              onClick={handleExploreMenu} // Add onClick handler
+              className="border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-red-500 transition duration-300"
+            >
               Explore Menu
             </button>
           </div>
@@ -151,8 +161,8 @@ const HomePage = () => {
       </section>
 
       {/* Footer Section */}
-      
-      <Footer/>
+
+      <Footer />
     </div>
   );
 };
