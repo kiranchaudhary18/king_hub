@@ -1,8 +1,11 @@
 import React from 'react';
 import Footer from './Footer';
+import { useNavigate } from 'react-router-dom';
 import PopularLocalities from './Location';
 
 const HomePage = () => {
+
+  const navigate = useNavigate(); 
 
   const handleOrderNow = () => {
     navigate('/restaurants'); // Navigate to the restaurants page
@@ -27,7 +30,7 @@ const HomePage = () => {
               Order Now
             </button>
             <button
-              onClick={handleExploreMenu} // Add onClick handler
+// Add onClick handler
               className="border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-red-500 transition duration-300"
             >
               Explore Menu
