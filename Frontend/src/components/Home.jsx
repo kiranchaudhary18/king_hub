@@ -26,12 +26,12 @@ const HomePage = () => {
           <div className="flex justify-center space-x-4">
             <button
               onClick={handleOrderNow}
-              className="bg-white text-red-500 font-semibold py-3 px-8 rounded-full hover:bg-opacity-90 transition duration-300">
+              className="bg-white text-red-500 font-semibold py-3 px-8 rounded-full hover:bg-opacity-90 transition duration-300 cursor-pointer">
               Order Now
             </button>
             <button
 // Add onClick handler
-              className="border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-red-500 transition duration-300"
+              className="border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-red-500 transition duration-300 cursor-pointer"
             >
               Explore Menu
             </button>
