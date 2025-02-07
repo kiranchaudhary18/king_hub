@@ -12,6 +12,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Get restaurants by location
+router.get('/:location', async (req, res) => {
+    try {
+        const location = req.params.location;
+        // Use a case-insensitive regex to match the location
+        const restaurants = await Restaurant.find({ location: new RegExp(location, 'i') });
+        if (restaurants.length === 0) {
+            return res.status(404).json({ error: 'No restaurants found in this location' });
+        }
+        res.json(restaurants);
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 // Get a single restaurant by ID
 router.get('/:id', async (req, res) => {
     try {
