@@ -5,24 +5,37 @@ const Menu = require('../models/Menu');
 // Get all menu items
 router.get('/', async (req, res) => {
     try {
-        const menu = await Menu.find();
+        // Check if any menu items exist
+        const menuCount = await Menu.countDocuments();
+        if (menuCount === 0) {
+            console.log('No menu items found in the database.');
+            return res.status(404).json({ error: 'No menu items available' });
+        }
+
+        const menu = await Menu.find().lean(); // Use lean() for better performance
+        console.log('Menu items fetched:', menu);
+
         res.json(menu);
     } catch (error) {
+        console.error('Error fetching menu items:', error);
         res.status(500).json({ error: 'Server error', details: error.message });
     }
 });
 
-// Get menu items by restaurant ID (placed above dynamic foodname route to prevent conflicts)
+// Get menu items by restaurant ID
 router.get('/restaurant/:restaurantId', async (req, res) => {
     try {
-        const menu = await Menu.find({ restaurantId: req.params.restaurantId });
+        const menu = await Menu.find({ restaurantId: req.params.restaurantId }).lean();
 
         if (menu.length === 0) {
+            console.log(`No menu items found for restaurant ID: ${req.params.restaurantId}`);
             return res.status(404).json({ error: 'No menu items found for this restaurant' });
         }
 
+        console.log('Menu items for restaurant:', menu);
         res.json(menu);
     } catch (error) {
+        console.error('Error fetching menu items for restaurant:', error);
         res.status(500).json({ error: 'Server error', details: error.message });
     }
 });
@@ -33,13 +46,17 @@ router.post('/', async (req, res) => {
         const { foodname, description, price, restaurantId, category, image } = req.body;
 
         if (!foodname || !price || !restaurantId) {
+            console.log('Missing required fields');
             return res.status(400).json({ error: 'Food name, price, and restaurant ID are required' });
         }
 
         const newMenu = new Menu({ foodname, description, price, restaurantId, category, image });
         await newMenu.save();
+
+        console.log('New menu item added:', newMenu);
         res.status(201).json({ message: 'Menu item added successfully', newMenu });
     } catch (error) {
+        console.error('Error adding new menu item:', error);
         res.status(500).json({ error: 'Server error', details: error.message });
     }
 });
@@ -50,11 +67,14 @@ router.put('/:id', async (req, res) => {
         const updatedMenu = await Menu.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
         if (!updatedMenu) {
+            console.log('Menu item not found');
             return res.status(404).json({ error: 'Menu item not found' });
         }
 
+        console.log('Menu item updated:', updatedMenu);
         res.json({ message: 'Menu item updated successfully', updatedMenu });
     } catch (error) {
+        console.error('Error updating menu item:', error);
         res.status(500).json({ error: 'Server error', details: error.message });
     }
 });
@@ -65,11 +85,14 @@ router.delete('/:id', async (req, res) => {
         const deletedMenu = await Menu.findByIdAndDelete(req.params.id);
 
         if (!deletedMenu) {
+            console.log('Menu item not found');
             return res.status(404).json({ error: 'Menu item not found' });
         }
 
+        console.log('Menu item deleted:', deletedMenu);
         res.json({ message: 'Menu item deleted successfully' });
     } catch (error) {
+        console.error('Error deleting menu item:', error);
         res.status(500).json({ error: 'Server error', details: error.message });
     }
 });
