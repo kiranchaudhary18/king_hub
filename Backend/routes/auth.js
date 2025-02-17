@@ -1,69 +1,41 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const User = require('../models/User');
+const Auth = require('../models/Auth');
 
-// User Registration
-router.post('/register', async (req, res) => {
+router.post("/", async (req, res) => {
     try {
+        const { sub, name, email, picture } = req.body;
 
-        const { name, email, password, address, contact } = req.body;
-
-        if (!name || !email || !password || !address || !contact) {
-            return res.status(400).json({ error: 'All fields are required' });
+        // Validate required fields
+        if (!sub || !name || !email) {
+            return res.status(400).json({ message: "Missing required fields" });
         }
-
-        // Normalize email
-        const normalizedEmail = email.toLowerCase();
 
         // Check if user already exists
-        const existingUser = await User.findOne({ email: normalizedEmail });
-        if (existingUser) {
-            return res.status(400).json({ error: 'Email already in use' });
-        }
-
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = new User({ 
-            name, 
-            email: normalizedEmail, 
-            password: hashedPassword, 
-            address, 
-            contact 
-        });
-
-        await newUser.save();
-        res.status(201).json({ message: 'User registered successfully' });
-    } catch (error) {
-        console.error("Registration error:", error);
-        res.status(500).json({ error: 'Server error' });
-    }
-});
-
-
-// User Login
-router.post('/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        // Normalize email to lowercase to avoid case sensitivity issues
-        const user = await User.findOne({ email: email.toLowerCase() });
+        let user = await Auth.findOne({ auth0Id: sub });
 
         if (!user) {
-            return res.status(400).json({ error: 'Invalid email or password' });
+            // Create new user
+            user = new Auth({ auth0Id: sub, name, email, picture });
+            await user.save();
+            return res.status(201).json({ message: "User saved successfully", userId: user._id });
         }
 
-        // Compare hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid email or password' });
-        }
+        // If user exists, send back response with user details
+        res.status(200).json({ message: "User already exists", user });
 
-        res.json({ message: 'Login successful', user });
     } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ error: 'Server error' });
+        console.error("🔴 Error saving user:", error);
+
+        // Handle duplicate key error
+        if (error.code === 11000) {
+            return res.status(400).json({
+                message: "Duplicate entry detected, this user already exists.",
+                error
+            });
+        }
+
+        res.status(500).json({ message: "Server error", error });
     }
 });
 
