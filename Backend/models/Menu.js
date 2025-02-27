@@ -1,32 +1,36 @@
 const mongoose = require('mongoose');
 
-const MenuSchema = new mongoose.Schema({
-    name: {
+const menuSchema = new mongoose.Schema({
+    foodname: {
         type: String,
         required: true,
-        trim: true
+        lowercase: true 
+    },
+    restaurantName: {
+        type: String,
+        required: true
     },
     description: {
         type: String,
-        trim: true
+        required: true
     },
     price: {
         type: Number,
         required: true
     },
-    restaurantId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Restaurant',
+    imageUrl: {
+        type: String,
         required: true
     },
     category: {
         type: String,
-        trim: true
-    },
-    image: {
-        type: String,
-        trim: true
+        required: true
     }
 });
 
-module.exports = mongoose.model('Menu', MenuSchema);
+// Ensuring unique foodname per restaurant
+menuSchema.index({ foodname: 1, restaurantName: 1 }, { unique: true });
+
+const Menu = mongoose.model('Menu', menuSchema);
+
+module.exports = Menu;
