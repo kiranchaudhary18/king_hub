@@ -22,6 +22,27 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:foodname', async (req, res) => {
+    try {
+      const foodname = req.params.foodname.toLowerCase();
+      // Use a case-insensitive regular expression to match the foodname.
+      const menuItems = await Menu.find({
+        foodname: { $regex: new RegExp(`^${foodname}$`, 'i') }
+      });
+  
+      if (!menuItems || menuItems.length === 0) {
+        return res.status(404).json({ message: "No menu items found with this foodname." });
+      }
+  
+      res.status(200).json(menuItems);
+    } catch (error) {
+      console.error("Error fetching menu items:", error);
+      res.status(500).json({ message: "Server error", error: error.message });
+    }
+  });
+  
+
+
 // Get menu items by restaurant ID
 router.get('/restaurant/:restaurantId', async (req, res) => {
     try {
@@ -39,6 +60,7 @@ router.get('/restaurant/:restaurantId', async (req, res) => {
         res.status(500).json({ error: 'Server error', details: error.message });
     }
 });
+
 
 // Add a new menu item
 router.post('/', async (req, res) => {
