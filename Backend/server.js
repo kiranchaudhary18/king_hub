@@ -17,6 +17,7 @@ app.use('/api/cart', require('./routes/cart')); // Cart management
 app.use('/api/search', require('./routes/search')); // Search functionality
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/hier', require('./routes/hier'));
+app.use('/api/email', require('./routes/email'));
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
