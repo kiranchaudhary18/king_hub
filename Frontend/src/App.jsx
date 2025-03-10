@@ -10,6 +10,7 @@ import Offer from './components/Offer';
 import Hier from './components/Hier.jsx';
 import Authuser from './components/Authuser.jsx';
 import { useAuth0 } from '@auth0/auth0-react';
+import RestaurantDetails from "./components/RestaurantDetails";
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path ="/footer" element ={<Footer/>}/>
         <Route path="/restaurants" element={<Restaurant />} />
+        <Route path="/restaurants/:id" element={<RestaurantDetails />} />
         <Route path="/about" element={<About />} />
         <Route path="/offer" element={<Offer />} />
         <Route path="/cart" element={<Cart />} />
