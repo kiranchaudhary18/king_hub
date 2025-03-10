@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "./Footer.jsx";
+import Footer from "./Footer"
 
 const RestaurantsPage = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -49,8 +49,8 @@ const RestaurantsPage = () => {
 
   if (loading)
     return (
-  <>
       <div className="flex flex-col items-center justify-center h-screen space-y-4">
+        {/* Modern Tailwind Loader */}
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
         <p className="text-lg text-gray-700 font-medium">Loading restaurants...</p>
       </div>
@@ -60,6 +60,7 @@ const RestaurantsPage = () => {
     return <div className="text-center text-red-500 py-10">Error: {error}</div>;
 
   return (
+    <>
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-8 lg:px-16 pt-25">
       <h1 className="text-4xl font-bold text-gray-900 text-center mb-8">All Restaurants</h1>
 
@@ -127,7 +128,7 @@ const RestaurantsPage = () => {
                 </p>
 
                 <button
-                  onClick={() => navigate(`/restaurant/:id`)}
+                  onClick={() => navigate(`/restaurants/67c54bc9758356ddea201250`)}
                   className="mt-4 bg-gradient-to-r from-blue-400 to-purple-500 text-white px-4 py-2 rounded-full shadow-md hover:from-blue-500 hover:to-purple-600 transition duration-300 ease-in-out cursor-pointer"
                 >
                   View Details
@@ -142,8 +143,8 @@ const RestaurantsPage = () => {
         )}
       </div>
     </div>
-<Footer /> 
-</>
+    <Footer />
+    </>
   );
 };
 
