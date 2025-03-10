@@ -1,3 +1,4 @@
+// Backend/routes/restaurants.js
 const express = require('express');
 const router = express.Router();
 const Restaurant = require('../models/Restaurant.js');
@@ -104,8 +105,8 @@ router.get('/:id/menu', async (req, res) => {
             let items = category.items.filter(item => {
                 let matches = true;
 
-                if (diet && item.diet) {
-                    matches = matches && item.diet.toLowerCase() === diet.toLowerCase();
+                if (diet) {
+                    matches = matches && item.diet === diet;
                 }
                 if (allergens) {
                     const allergenList = allergens.split(","); // Convert string to array
@@ -113,18 +114,18 @@ router.get('/:id/menu', async (req, res) => {
                 }
                 if (price) {
                     let minPrice = 0, maxPrice = Infinity;
-                    if (price === "Under $5") {
+                    if (price === "Under 300") {
                         maxPrice = 5;
-                    } else if (price === "$5 - $10") {
-                        minPrice = 5;
-                        maxPrice = 10;
-                    } else if (price === "Over $10") {
-                        minPrice = 10;
+                    } else if (price === "300-500") {
+                        minPrice = 300;
+                        maxPrice = 500;
+                    } else if (price === "Over 500") {
+                        minPrice = 500;
                     }
                     matches = matches && item.price >= minPrice && item.price <= maxPrice;
                 }
-                if (spice && item.spiceLevel) {
-                    matches = matches && item.spiceLevel.toLowerCase() === spice.toLowerCase();
+                if (spice) {
+                    matches = matches && item.spiceLevel === spice;
                 }
 
                 return matches;
@@ -143,5 +144,6 @@ router.get('/:id/menu', async (req, res) => {
         res.status(500).json({ message: "Server Error", error: error.message });
     }
 });
+
 
 module.exports = router;
