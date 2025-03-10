@@ -84,4 +84,64 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+
+router.get('/:id/menu', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { diet, allergens, price, spice } = req.query;
+
+        // Find the restaurant by ID
+        const restaurant = await Restaurant.findById(id);
+        if (!restaurant) {
+            return res.status(404).json({ message: "Restaurant not found" });
+        }
+
+        let filteredMenu = [];
+
+        // Loop through menu categories
+        restaurant.menu.forEach(category => {
+            // Filter items based on user-selected filters
+            let items = category.items.filter(item => {
+                let matches = true;
+
+                if (diet && item.diet) {
+                    matches = matches && item.diet.toLowerCase() === diet.toLowerCase();
+                }
+                if (allergens) {
+                    const allergenList = allergens.split(","); // Convert string to array
+                    matches = matches && allergenList.every(a => item.allergies.includes(a));
+                }
+                if (price) {
+                    let minPrice = 0, maxPrice = Infinity;
+                    if (price === "Under $5") {
+                        maxPrice = 5;
+                    } else if (price === "$5 - $10") {
+                        minPrice = 5;
+                        maxPrice = 10;
+                    } else if (price === "Over $10") {
+                        minPrice = 10;
+                    }
+                    matches = matches && item.price >= minPrice && item.price <= maxPrice;
+                }
+                if (spice && item.spiceLevel) {
+                    matches = matches && item.spiceLevel.toLowerCase() === spice.toLowerCase();
+                }
+
+                return matches;
+            });
+
+            if (items.length > 0) {
+                filteredMenu.push({
+                    categoryName: category.categoryName,
+                    items: items
+                });
+            }
+        });
+
+        res.json(filteredMenu);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+});
+
 module.exports = router;
