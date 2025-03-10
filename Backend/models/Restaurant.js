@@ -2,10 +2,12 @@ const mongoose = require("mongoose");
 
 const menuItemSchema = new mongoose.Schema({
     itemName: { type: String, required: true },
-    image: { type: String, required: true }, // Image URL of the menu item
+    image: { type: String, required: true },
     price: { type: Number, required: true },
     description: { type: String, required: true },
-    allergies: { type: [String], default: [] }, // List of allergens
+    diet: { type: String, required: false },  // Added diet field
+    allergies: { type: [String], default: [] },
+    spiceLevel: { type: String, required: false },  // Added spiceLevel field
     rating: { type: Number, min: 1, max: 5, default: 0 },
     isPopular: { type: Boolean, default: false }
 });
