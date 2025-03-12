@@ -741,13 +741,6 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
                     Clear All
                   </button>
 
-                  <button
-                    className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-300"
-                    onClick={() => getFilteredMenuItems()} // Call filtering function
-                  >
-                    Apply Filters
-                  </button>
-
                 </div>
               </div>
             )}
