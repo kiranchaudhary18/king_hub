@@ -24,7 +24,7 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
   const [selectedFilters, setSelectedFilters] = useState({
     diet: [], // ["Veg", "Non-Veg", "Vegan"]
     spiceLevel: [], // ["Not Spicy", "Mild", "Spicy"]
-    priceRange: [0, 1000], // [Min, Max]
+    priceRange: [], // [Min, Max]
     allergies: [], // ["Nuts", "Gluten", "Dairy"]
     popularOnly: false,
   });
@@ -131,41 +131,34 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
   const handleFilterChange = (filterType, value) => {
     setSelectedFilters((prev) => {
       if (filterType === "priceRange") {
-        return { ...prev, priceRange: value }; // Handle range input
+        return { ...prev, priceRange: [value] }; // Only store the selected value
       }
 
       if (filterType === "popularOnly") {
-        return { ...prev, popularOnly: value }; // Toggle popular filter
+        return { ...prev, popularOnly: value };
       }
 
       return {
         ...prev,
         [filterType]: prev[filterType].includes(value)
-          ? prev[filterType].filter((item) => item !== value) // Remove if already selected
-          : [...prev[filterType], value], // Add if not selected
+          ? prev[filterType].filter((item) => item !== value)
+          : [...prev[filterType], value],
       };
     });
   };
 
 
-  // Filter menu items based on search and filters
+
+
   // Filter menu items based on search and filters
   const getFilteredMenuItems = (items) => {
-    console.log("All Items:", items); // Log all items
-    console.log("Search Term:", searchTerm); // Log the search term
     return items.filter((item) => {
-      // Convert search term and item fields to lowercase for case-insensitive search
-      const searchTermLower = searchTerm.toLowerCase();
-      const itemNameLower = item.itemName.toLowerCase();
-      const descriptionLower = item.description.toLowerCase();
-
-      // Check if the search term matches itemName or description
       const matchesSearch =
         searchTerm === "" ||
-        itemNameLower.includes(searchTermLower) ||
-        descriptionLower.includes(searchTermLower);
+        item.itemName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-      // Apply additional filters (if any)
+      // Filter by Diet
       if (
         selectedFilters.diet.length > 0 &&
         !selectedFilters.diet.includes(item.diet)
@@ -173,6 +166,7 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
         return false;
       }
 
+      // Filter by Allergies
       if (
         selectedFilters.allergies.length > 0 &&
         selectedFilters.allergies.some((allergen) =>
@@ -182,6 +176,7 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
         return false;
       }
 
+      // Filter by Spice Level
       if (
         selectedFilters.spiceLevel.length > 0 &&
         !selectedFilters.spiceLevel.includes(item.spiceLevel)
@@ -189,17 +184,24 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
         return false;
       }
 
-      if (
-        selectedFilters.priceRange.length > 0 &&
-        (item.price <= selectedFilters.priceRange[0] ||
-          item.price >= selectedFilters.priceRange[1])
-      ) {
-        return false;
+      // ✅ Filter by Price Range
+      if (selectedFilters.priceRange.length > 0) {
+        const selectedPrice = selectedFilters.priceRange[0]; // Only one value
+
+        const itemPrice = item.price;
+        if (
+          (selectedPrice === "below_200" && itemPrice >= 200) ||
+          (selectedPrice === "200_500" && (itemPrice < 200 || itemPrice > 500)) ||
+          (selectedPrice === "above_500" && itemPrice <= 500)
+        ) {
+          return false;
+        }
       }
 
-      return matchesSearch; // Return items that match the search term and filters
+      return matchesSearch;
     });
   };
+
 
 
 
@@ -659,7 +661,7 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
                   <div>
                     <h3 className="font-medium text-gray-900 mb-2">Diet</h3>
                     <div className="space-y-2">
-                      {["Vegetarian", "Vegan", "Gluten-Free"].map((diet) => (
+                      {["Vegetarian", "Vegan", "Gluten-Free", "Non-Vegetarian"].map((diet) => (
                         <label key={diet} className="flex items-center">
                           <input
                             type="checkbox"
@@ -694,25 +696,45 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
 
                   <div>
                     <h3 className="font-medium text-gray-900 mb-2">Price Range</h3>
-                    <div className="flex items-center space-x-4">
-                      <span className="text-gray-700">₹{selectedFilters.priceRange[0] || 0}</span>
-                      <input
-                        type="range"
-                        min="0"
-                        max="1000"
-                        value={selectedFilters.priceRange[1] || 1000}
-                        onChange={(e) => handleFilterChange("priceRange", [0, Number(e.target.value)])}
-                        className="w-full"
-                      />
-                      <span className="text-gray-700">₹{selectedFilters.priceRange[1] || 1000}</span>
-                    </div>
+                    <div className="flex flex-col space-y-2">
+                      <label className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedFilters.priceRange.includes("below_200")}
+                          onChange={() => handleFilterChange("priceRange", "below_200")}
+                          className="form-checkbox text-blue-600"
+                        />
+                        <span className="text-gray-700">Below ₹200</span>
+                      </label>
 
+                      <label className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedFilters.priceRange.includes("200_500")}
+                          onChange={() => handleFilterChange("priceRange", "200_500")}
+                          className="form-checkbox text-blue-600"
+                        />
+                        <span className="text-gray-700">₹200 - ₹500</span>
+                      </label>
+
+                      <label className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={selectedFilters.priceRange.includes("above_500")}
+                          onChange={() => handleFilterChange("priceRange", "above_500")}
+                          className="form-checkbox text-blue-600"
+                        />
+                        <span className="text-gray-700">Above ₹500</span>
+                      </label>
+                    </div>
                   </div>
+
+
 
                   <div>
                     <h3 className="font-medium text-gray-900 mb-2">Spice Level</h3>
                     <div className="space-y-2">
-                      {["Not Spicy", "Mild", "Spicy"].map((level) => (
+                      {["Not Spicy", "Mild", "Medium", "Spicy"].map((level) => (
                         <label key={level} className="flex items-center">
                           <input
                             type="checkbox"
