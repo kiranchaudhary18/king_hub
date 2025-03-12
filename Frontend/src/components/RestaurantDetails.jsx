@@ -787,100 +787,122 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
           </div>
 
           {/* Menu Section */}
+          {/* Menu Section */}
           <div className="px-4 md:px-10 pb-32" ref={menuRef}>
-
             {/* Menu Categories and Items */}
             <div className="mt-8 space-y-10">
-              {restaurant.menu?.map((category) => {
-                const filteredItems = getFilteredMenuItems(category.items || []);
+              {(() => {
+                // Check if any category has items after filtering
+                const hasItems = restaurant.menu?.some((category) => {
+                  const filteredItems = getFilteredMenuItems(category.items || []);
+                  return filteredItems.length > 0;
+                });
 
-                // Skip rendering empty categories when filtered
-                if (filteredItems.length === 0 && (searchTerm !== "" || filterPopular)) {
-                  return null;
+                // If no items are found after filtering, display a message
+                if (!hasItems) {
+                  return (
+                    <div className="flex flex-col items-center justify-center py-20">
+                      <div className="text-4xl text-gray-300 mb-4">🍽️</div>
+                      <h2 className="text-2xl font-bold text-gray-900 mb-4">No Items Found</h2>
+                      <p className="text-gray-600 text-center max-w-md">
+                        We couldn't find any items matching your search and filters. Try adjusting your filters or search term.
+                      </p>
+                    </div>
+                  );
                 }
 
-                return (
-                  <div key={category.id} id={`category-${category.id}`} className="scroll-mt-32">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                      {category.categoryName}
-                    </h2>
+                // Otherwise, render the categories and items
+                return restaurant.menu?.map((category) => {
+                  const filteredItems = getFilteredMenuItems(category.items || []);
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {filteredItems.map((item) => (
-                        <div
-                          key={item.id}
-                          className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow group cursor-pointer"
-                          onClick={() => setActiveItemModal(item)}
-                        >
-                          {/* Render item details */}
-                          <div className="relative h-48">
-                            <img
-                              src={item.image}
-                              alt={item.itemName}
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                            {item.isPopular && (
-                              <div className="absolute top-2 left-2 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                Popular
-                              </div>
-                            )}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleFavorite(item.id);
-                              }}
-                              className={`absolute top-2 right-2 p-2 rounded-full ${favorites.includes(item.id)
-                                ? "bg-pink-500 text-white"
-                                : "bg-white/70 text-gray-600 hover:bg-white"
-                                } transition-colors`}
-                            >
-                              {favorites.includes(item.id) ? (
-                                <IoHeart size={18} />
-                              ) : (
-                                <IoHeartOutline size={18} />
+                  // Skip rendering empty categories when filtered
+                  if (filteredItems.length === 0 && (searchTerm !== "" || filterPopular)) {
+                    return null;
+                  }
+
+                  return (
+                    <div key={category.id} id={`category-${category.id}`} className="scroll-mt-32">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                        {category.categoryName}
+                      </h2>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filteredItems.map((item) => (
+                          <div
+                            key={item.id}
+                            className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow group cursor-pointer"
+                            onClick={() => setActiveItemModal(item)}
+                          >
+                            {/* Render item details */}
+                            <div className="relative h-48">
+                              <img
+                                src={item.image}
+                                alt={item.itemName}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              />
+                              {item.isPopular && (
+                                <div className="absolute top-2 left-2 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                  Popular
+                                </div>
                               )}
-                            </button>
-                          </div>
-
-                          <div className="p-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
-                                {item.itemName}
-                              </h3>
-                              <span className="font-bold text-indigo-600">
-                                ₹{item.price?.toFixed(2) || "0.00"}
-                              </span>
-                            </div>
-
-                            <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                              {item.description}
-                            </p>
-
-                            <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
-                              <div className="flex items-center text-yellow-400">
-                                <IoStar size={16} />
-                                <span className="ml-1 text-gray-700 text-sm font-medium">
-                                  {item.rating || "0.0"}
-                                </span>
-                              </div>
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  addToCart(item);
+                                  toggleFavorite(item.id);
                                 }}
-                                className="p-2 bg-indigo-100 text-indigo-600 rounded-full hover:bg-indigo-600 hover:text-white transition-colors ml-auto"
+                                className={`absolute top-2 right-2 p-2 rounded-full ${favorites.includes(item.id)
+                                  ? "bg-pink-500 text-white"
+                                  : "bg-white/70 text-gray-600 hover:bg-white"
+                                  } transition-colors`}
                               >
-                                <IoAdd size={18} />
+                                {favorites.includes(item.id) ? (
+                                  <IoHeart size={18} />
+                                ) : (
+                                  <IoHeartOutline size={18} />
+                                )}
                               </button>
-                              <ToastContainer />
+                            </div>
+
+                            <div className="p-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                                  {item.itemName}
+                                </h3>
+                                <span className="font-bold text-indigo-600">
+                                  ₹{item.price?.toFixed(2) || "0.00"}
+                                </span>
+                              </div>
+
+                              <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                                {item.description}
+                              </p>
+
+                              <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
+                                <div className="flex items-center text-yellow-400">
+                                  <IoStar size={16} />
+                                  <span className="ml-1 text-gray-700 text-sm font-medium">
+                                    {item.rating || "0.0"}
+                                  </span>
+                                </div>
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    addToCart(item);
+                                  }}
+                                  className="p-2 bg-indigo-100 text-indigo-600 rounded-full hover:bg-indigo-600 hover:text-white transition-colors ml-auto"
+                                >
+                                  <IoAdd size={18} />
+                                </button>
+                                <ToastContainer />
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                });
+              })()}
             </div>
           </div>
 
