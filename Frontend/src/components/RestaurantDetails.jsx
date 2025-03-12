@@ -167,13 +167,16 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
       }
 
       // Filter by Allergies
-      if (
-        selectedFilters.allergies.length > 0 &&
-        selectedFilters.allergies.some((allergen) =>
-          item.allergies.includes(allergen)
-        )
-      ) {
-        return false;
+      if (selectedFilters.allergies.length > 0) {
+        // Convert "No Dairy" to "Dairy" for filtering
+        const selectedAllergies = selectedFilters.allergies.map((allergy) =>
+          allergy.replace("No ", "")
+        );
+
+        // Exclude items that contain any selected allergy
+        if (item.allergies.some((allergen) => selectedAllergies.includes(allergen))) {
+          return false;
+        }
       }
 
       // Filter by Spice Level
@@ -196,6 +199,9 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
         ) {
           return false;
         }
+      }
+      if (filterPopular && !item.isPopular) {
+        return false;
       }
 
       return matchesSearch;
@@ -640,10 +646,11 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
               <div className="flex space-x-3">
                 <button
                   className={`px-5 py-3 rounded-xl font-medium ${filterPopular ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100'} transition-colors duration-300`}
-                  onClick={() => setFilterPopular(!filterPopular)}
+                  onClick={() => setFilterPopular(!filterPopular)} // Toggle the filterPopular state
                 >
                   Popular Items
                 </button>
+
 
                 <button
                   className="p-3 rounded-xl bg-white text-gray-600 hover:bg-gray-100 transition-colors duration-300"
@@ -677,7 +684,7 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
                   </div>
 
                   <div>
-                    <h3 className="font-medium text-gray-900 mb-2">Allergens</h3>
+                    <h3 className="font-medium text-gray-900 mb-2">Allergies</h3>
                     <div className="space-y-2">
                       {["No Dairy", "No Nuts", "No Eggs"].map((allergy) => (
                         <label key={allergy} className="flex items-center">
