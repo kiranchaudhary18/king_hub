@@ -742,7 +742,7 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
 
                           <div className="p-4">
                             <div className="flex items-center justify-between mb-2">
-                              <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{item.name}</h3>
+                              <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{item.itemName}</h3>
                               <span className="font-bold text-indigo-600">₹{item.price?.toFixed(2) || "0.00"}</span>
                             </div>
 

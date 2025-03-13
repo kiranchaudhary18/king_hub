@@ -114,13 +114,13 @@ router.get('/:id/menu', async (req, res) => {
                 }
                 if (price) {
                     let minPrice = 0, maxPrice = Infinity;
-                    if (price === "Under $5") {
+                    if (price === "Under 300") {
                         maxPrice = 5;
-                    } else if (price === "$5 - $10") {
-                        minPrice = 5;
-                        maxPrice = 10;
-                    } else if (price === "Over $10") {
-                        minPrice = 10;
+                    } else if (price === "300-500") {
+                        minPrice = 300;
+                        maxPrice = 500;
+                    } else if (price === "Over 500") {
+                        minPrice = 500;
                     }
                     matches = matches && item.price >= minPrice && item.price <= maxPrice;
                 }
