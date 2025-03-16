@@ -247,9 +247,6 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
     } else {
       setCart([...cart, { ...item, quantity: 1 }]);
     }
-
-    // Show a small animation or notification
-    showItemAddedNotification(item.itemName);
   };
 
   // Remove from cart function
@@ -282,16 +279,17 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
   };
 
   // Show notification when item is added to cart
-  const showItemAddedNotification = (item) => {
-    toast.success(`${item} added to cart`, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  };
+const showItemAddedNotification = (item) => {
+  toast.success(`${item} added to cart`, {
+    position: "top-right",
+    autoClose: 2000, // Ensure this is set
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "light",
+  });
+};
 
   // Scroll to category
   const scrollToCategory = (categoryId) => {
@@ -418,7 +416,7 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
           <div className="p-6 flex-1 overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <span className="text-2xl font-bold text-indigo-600">
-                ${item.price.toFixed(2)}
+                ₹{item.price.toFixed(2)}
               </span>
               <button
                 onClick={() => toggleFavorite(item.id)}
@@ -1186,7 +1184,7 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
                                   {item.itemName}
                                 </h4>
                                 <span className="font-bold text-indigo-600">
-                                  ${(item.price * item.quantity).toFixed(2)}
+                                  ₹{(item.price * item.quantity).toFixed(2)}
                                 </span>
                               </div>
                               <p className="text-gray-600 text-sm mt-1 line-clamp-1">
@@ -1216,19 +1214,19 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
                           <div className="mb-2 flex justify-between">
                             <span className="text-gray-600">Subtotal</span>
                             <span className="font-medium">
-                              ${cartTotal.toFixed(2)}
+                              ₹{cartTotal.toFixed(2)}
                             </span>
                           </div>
                           <div className="mb-2 flex justify-between">
                             <span className="text-gray-600">Delivery Fee</span>
                             <span className="font-medium">
-                              ${deliveryFee.toFixed(2)}
+                              ₹{deliveryFee.toFixed(2)}
                             </span>
                           </div>
                           <div className="mb-2 flex justify-between">
                             <span className="text-gray-600">Tax</span>
                             <span className="font-medium">
-                              ${tax.toFixed(2)}
+                              ₹{tax.toFixed(2)}
                             </span>
                           </div>
                           <div className="pt-3 mt-3 border-t border-gray-200 flex justify-between">
@@ -1236,7 +1234,7 @@ const RestaurantDetails = ({ restaurantId, cartItems }) => {
                               Total
                             </span>
                             <span className="font-bold text-gray-900">
-                              ${finalTotal.toFixed(2)}
+                              ₹{finalTotal.toFixed(2)}
                             </span>
                           </div>
                         </div>
