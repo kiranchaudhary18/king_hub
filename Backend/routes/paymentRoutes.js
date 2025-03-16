@@ -37,8 +37,8 @@ router.post("/create-checkout-session", async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: "https://kinghub-1.netlify.app//success",
-      cancel_url: "https://kinghub-1.netlify.app//cancel",
+      success_url: "https://kinghub-1.netlify.app/success",
+      cancel_url: "https://kinghub-1.netlify.app/cancel",
     });
 
     console.log("✅ Session Created Successfully:", session.url);
