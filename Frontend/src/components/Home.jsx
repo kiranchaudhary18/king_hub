@@ -88,7 +88,7 @@ const HomePage = () => {
                 rating: "4.5 (1.2k)",
                 image:
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjjuDvUyzIa7Dkjeg1yF4Lf_tcIGvX7TZG9w&s",
-                route: "/restaurant/burgerking",
+                route: "/restaurants/burgerking",
               },
               {
                 name: "Pizza Hut",
@@ -97,7 +97,7 @@ const HomePage = () => {
                 rating: "4.7 (2.5k)",
                 image:
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpcC3Vf4npJJY8DUHyxgsO6FaVP7q1ARnGew&s",
-                route: "/restaurant/pizzahut",
+                route: "/restaurants/pizzahut",
               },
               {
                 name: "Sushi House",
@@ -106,7 +106,7 @@ const HomePage = () => {
                 rating: "4.8 (3.1k)",
                 image:
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9F5zLShmIbSxiDN2omETBOXksWQQ4CbyYRQ&s",
-                route: "/restaurant/sushihouse",
+                route: "/restaurants/sushihouse",
               },
             ].map((restaurant, index) => (
               <div
