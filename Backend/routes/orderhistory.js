@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Order = require("../models/Order"); // Import Order model
+const Order = require("../models/Orderhistory"); // Import Order model
 
 // POST request to add a new order
 router.post("/", async (req, res) => {

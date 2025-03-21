@@ -18,6 +18,7 @@ app.use("/api/search", require("./routes/search"));
 app.use("/api/contact", require("./routes/contact"));
 app.use("/api/hier", require("./routes/hier"));
 app.use("/api/email", require("./routes/email"));
+app.use("/api/orderhistory", require("./routes/orderhistory"));
 app.use("/api/payment", require("./routes/paymentRoutes")); 
 
 // MongoDB connection
